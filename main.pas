@@ -1,6 +1,8 @@
 ﻿uses {render, }logic, defines, {unmenu,} WPFObjects, GraphWPF;
 var fon:ObjectWPF;
 var name:ObjectWPF;
+var questButton:ObjectWPF;
+var manualButton:ObjectWPF;
 var playButton:ObjectWPF;
 var exitButton:ObjectWPF;
 
@@ -75,10 +77,17 @@ procedure menu();
 begin
   fon:=new RectangleWPF(0,0,Window.Width,Window.Height,rgb(31, 0, 59));
   name:=new RectangleWPF(Window.Center.X-150,Window.Height/6,300,60,rgb(81, 50, 109));
-  playButton:=new RectangleWPF(Window.Center.X-100,(Window.Height/6)*3,200,50,rgb(81, 50, 109));
-  exitButton:=new RectangleWPF(Window.Center.X-100,(Window.Height/6)*4,200,50,rgb(81, 50, 109));
+  questButton:=new RectangleWPF(Window.Center.X-100,(Window.Height/7)*3,200,50,rgb(81, 50, 109));
+  manualButton:=new RectangleWPF(Window.Center.X-100,(Window.Height/7)*4,200,50,rgb(81, 50, 109));
+  playButton:=new RectangleWPF(Window.Center.X-100,(Window.Height/7)*5,200,50,rgb(81, 50, 109));
+  exitButton:=new RectangleWPF(Window.Center.X-100,(Window.Height/7)*6,200,50,rgb(81, 50, 109));
+  
   name.Text:='Кладоискатель';
   name.FontColor:=rgb(255,255,255);
+  questButton.Text:='Задание';
+  questButton.FontColor:=rgb(255,255,255);
+  manualButton.Text:='Руководство';
+  manualButton.FontColor:=rgb(255,255,255);
   playButton.Text:='Играть';
   playButton.FontColor:=rgb(255,255,255);
   exitButton.Text:='Выход';
