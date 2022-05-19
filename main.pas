@@ -5,7 +5,8 @@ var questButton:ObjectWPF;
 var manualButton:ObjectWPF;
 var playButton:ObjectWPF;
 var exitButton:ObjectWPF;
-
+var state:string;
+var newstate:string;
 //завершение игры
 procedure _end();
 begin
@@ -20,7 +21,10 @@ begin
   n.Text:='Счет: '+counter.Number;
   n.FontColor:=counter.FontColor;
   //DrawText(Window.Width/2-25,Window.Height/2-150,300,50,'Счет: '+counter.Number);
-  sleep(500);
+  var menuButton:ObjectWPF:=new RectangleWPF(Window.Center.X-50,Window.Center.Y+25,100,25,rgb(81, 50, 109));
+  menuButton.Text:='назад';
+  menuButton.FontColor:=rgb(255,255,255);
+  OnMouseDown:= procedure(x,y:real;b:integer) -> if (menuButton.Center.X-50<x) and (menuButton.Center.X+50>x) and (menuButton.Center.Y-12<y) and (menuButton.Center.Y+12>y) then newstate:='menu';
 end;
 //процедура игры
 procedure game();
@@ -68,9 +72,15 @@ begin
        OnMouseDown:=nil;
        init();
        BeginFrameBasedAnimation(game,60);
+       newstate:='game';
+       state:='game';
       end;
     if (x > exitButton.Center.X - 100) and (x < exitButton.Center.X + 100) and (y > exitButton.Center.Y - 25) and (y < exitButton.Center.Y + 25)then
        Window.Close;
+    if (x > questButton.Center.X - 100) and (x < questButton.Center.X + 100) and (y > questButton.Center.Y - 25) and (y < questButton.Center.Y + 25)then
+       newstate:='ques';
+    if (x > manualButton.Center.X - 100) and (x < manualButton.Center.X + 100) and (y > manualButton.Center.Y - 25) and (y < manualButton.Center.Y + 25)then
+       newstate:='manu';
    end;
 end;
 procedure menu();
@@ -94,14 +104,58 @@ begin
   exitButton.FontColor:=rgb(255,255,255);
   OnMouseDown:= MouseDown;
 end;
+procedure manual();
+begin
+  fon:=new RectangleWPF(0,0,Window.Width,Window.Height,rgb(31, 0, 59));
+  fon.Text:='ну типа эээ карочи клацаешь та на стрелочки, вот, enjoy';
+  fon.FontColor:=rgb(255,255,255);
+  var menuButton:ObjectWPF:=new RectangleWPF(Window.Width-100,0,100,25,rgb(81, 50, 109));
+  menuButton.Text:='назад';
+  menuButton.FontColor:=rgb(255,255,255);
+  OnMouseDown:= procedure(x,y:real;b:integer) -> if (menuButton.Center.X-50<x) and (menuButton.Center.X+50>x) and (menuButton.Center.Y-12<y) and (menuButton.Center.Y+12>y) then newstate:='menu';
+end;
+procedure quest();
+begin
+  fon:=new RectangleWPF(0,0,Window.Width,Window.Height,rgb(31, 0, 59));
+  fon.Text:='ну курсач запилить блин';
+  fon.FontColor:=rgb(255,255,255);
+  var menuButton:ObjectWPF:=new RectangleWPF(Window.Width-100,0,100,25,rgb(81, 50, 109));
+  menuButton.Text:='назад';
+  menuButton.FontColor:=rgb(255,255,255);
+  OnMouseDown:= procedure(x,y:real;b:integer) -> if (menuButton.Center.X-50<x) and (menuButton.Center.X+50>x) and (menuButton.Center.Y-12<y) and (menuButton.Center.Y+12>y) then newstate:='menu';
+end;
 begin
     window.Maximize;
-    menu;
+    newstate:='menu';
     //init;
     //меню
    { menu;
     init();//инициализация
     //события
     BeginFrameBasedAnimation(game,60);}
+    while True do
+    begin
+      if newstate<>state then
+      begin
+        if newstate='menu' then 
+        begin
+          state:='menu';
+          menu();
+        end
+        else if newstate='manu' then
+        begin
+          state:='manu';
+          manual();
+        end
+        else if newstate='ques' then
+        begin
+          state:='ques';
+          quest();
+        end
+      end;
+    //  else if state='manu' then
+
+      //else if state='ques' then
+    end;
     
 end.
