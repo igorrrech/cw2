@@ -1,12 +1,18 @@
 ﻿uses {render, }logic, defines, {unmenu,} WPFObjects, GraphWPF;
 var fon:ObjectWPF;
 var name:ObjectWPF;
+//кнопки
 var questButton:ObjectWPF;
 var manualButton:ObjectWPF;
 var playButton:ObjectWPF;
 var exitButton:ObjectWPF;
+//состояния программы
 var state:string;
 var newstate:string;
+//рейтинг
+var rate:Text;
+var str:string;
+var bestScore:integer;
 //завершение игры
 procedure _end();
 begin
@@ -17,8 +23,15 @@ begin
     d.Destroy;
   player.Visible:=false;
   counter.Visible:=false;
-  var n:RectangleWPF:= new RectangleWPF(Window.Center.X-150,Window.Center.Y-25,300,50,EmptyColor);
-  n.Text:='Счет: '+counter.Number;
+  if counter.Number > bestScore then
+    begin
+      Rewrite(rate);
+      writeln(rate, counter.Number);
+      close(rate);
+      bestScore:=counter.Number;
+    end;
+  var n:RectangleWPF:= new RectangleWPF(Window.Center.X-200,Window.Center.Y-25,400,50,EmptyColor);
+  n.Text:='Ваш счет: '+counter.Number+ ' Лучший счет: '+bestScore;
   n.FontColor:=counter.FontColor;
   //DrawText(Window.Width/2-25,Window.Height/2-150,300,50,'Счет: '+counter.Number);
   var menuButton:ObjectWPF:=new RectangleWPF(Window.Center.X-50,Window.Center.Y+25,100,25,rgb(81, 50, 109));
@@ -104,6 +117,7 @@ begin
   exitButton.FontColor:=rgb(255,255,255);
   OnMouseDown:= MouseDown;
 end;
+//инструкция
 procedure manual();
 begin
   fon:=new RectangleWPF(0,0,Window.Width,Window.Height,rgb(31, 0, 59));
@@ -114,6 +128,7 @@ begin
   menuButton.FontColor:=rgb(255,255,255);
   OnMouseDown:= procedure(x,y:real;b:integer) -> if (menuButton.Center.X-50<x) and (menuButton.Center.X+50>x) and (menuButton.Center.Y-12<y) and (menuButton.Center.Y+12>y) then newstate:='menu';
 end;
+//задание
 procedure quest();
 begin
   fon:=new RectangleWPF(0,0,Window.Width,Window.Height,rgb(31, 0, 59));
@@ -124,15 +139,31 @@ begin
   menuButton.FontColor:=rgb(255,255,255);
   OnMouseDown:= procedure(x,y:real;b:integer) -> if (menuButton.Center.X-50<x) and (menuButton.Center.X+50>x) and (menuButton.Center.Y-12<y) and (menuButton.Center.Y+12>y) then newstate:='menu';
 end;
+//заставка
+procedure cutscene();
 begin
+  fon:=new RectangleWPF(0,0,Window.Width,Window.Height,rgb(31, 0, 59));
+  var hatObj:=new RectangleWPF(Window.Center.X-350,0,700,100,rgb(31, 0, 59));
+  hatObj.Text:=hat; hatObj.FontColor:=rgb(255,255,255);
+  var courseObj:=new RectangleWPF(Window.Center.X-300,150,600,80,rgb(31, 0, 59));
+  courseObj.Text:='Курсовая по теме №3 "Игровые прорграммы"'+#10+'              Вариант 2 "Искатель кладов"'; courseObj.FontColor:=rgb(255,255,255);
+  var stdObj:=new RectangleWPF(Window.Width-400,500,500,80,rgb(31, 0, 59));
+  stdObj.Text:='Выполнил: студент группы 145'+#10+'Сурма М.В.'+#10+'Проверила Москвитина О.А.';stdObj.FontColor:=rgb(255,255,255);
+  var dataObj:=new RectangleWPF(Window.Center.X-100,Window.Height-80,200,80,rgb(31, 0, 59));
+  dataObj.Text:='        Рязань 2022'+#10+'Подождите 10 секунд...';dataObj.FontColor:=rgb(255,255,255);
+  sleep(10000);
+end;
+begin
+    Assign(rate,'rate.txt');
+    Reset(rate);
+    while not EOF(rate) do
+      readln(rate,str);
+    bestScore:=StrToInt(str);
+    close(rate);
+ 
     window.Maximize;
+    cutscene();
     newstate:='menu';
-    //init;
-    //меню
-   { menu;
-    init();//инициализация
-    //события
-    BeginFrameBasedAnimation(game,60);}
     while True do
     begin
       if newstate<>state then
@@ -153,9 +184,6 @@ begin
           quest();
         end
       end;
-    //  else if state='manu' then
-
-      //else if state='ques' then
     end;
     
 end.
