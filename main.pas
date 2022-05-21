@@ -19,8 +19,10 @@ begin
   EndFrameBasedAnimation();
   foreach var h:ObjectWPF in hunters do
     h.Destroy;
+  hunters:= new List<ObjectWPF>();
   foreach var d:ObjectWPF in dots do
     d.Destroy;
+  dots:= new List<ObjectWPF>();
   player.Visible:=false;
   counter.Visible:=false;
   if counter.Number > bestScore then
@@ -31,17 +33,21 @@ begin
       bestScore:=counter.Number;
     end;
   var n:RectangleWPF:= new RectangleWPF(Window.Center.X-200,Window.Center.Y-25,400,50,EmptyColor);
-  n.Text:='Ваш счет: '+counter.Number+ ' Лучший счет: '+bestScore;
+  var coun:=counter.Number;
+  n.Text:='Ваш счет: '+coun+ ' Лучший счет: '+bestScore;
   n.FontColor:=counter.FontColor;
+  counter.Destroy;
   //DrawText(Window.Width/2-25,Window.Height/2-150,300,50,'Счет: '+counter.Number);
+  writeln(dots.Count);
   var menuButton:ObjectWPF:=new RectangleWPF(Window.Center.X-50,Window.Center.Y+25,100,25,rgb(81, 50, 109));
-  menuButton.Text:='назад';
+  menuButton.Text:='меню';
   menuButton.FontColor:=rgb(255,255,255);
   OnMouseDown:= procedure(x,y:real;b:integer) -> if (menuButton.Center.X-50<x) and (menuButton.Center.X+50>x) and (menuButton.Center.Y-12<y) and (menuButton.Center.Y+12>y) then newstate:='menu';
 end;
 //процедура игры
 procedure game();
 begin   
+         counter.Number:=dots.Count;
          if (score > 10*lvl) and (lvl<10)then 
          begin
            //counter.Number:=counter.Number+1;
