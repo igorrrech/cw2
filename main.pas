@@ -21,6 +21,8 @@ begin
     h.Destroy;
   foreach var d:ObjectWPF in dots do
     d.Destroy;
+  hunters:=new List<ObjectWPF>(); 
+  dots:=new List<ObjectWPF>(); 
   player.Visible:=false;
   counter.Visible:=false;
   if counter.Number > bestScore then
